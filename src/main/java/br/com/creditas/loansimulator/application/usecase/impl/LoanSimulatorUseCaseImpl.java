@@ -1,5 +1,6 @@
 package br.com.creditas.loansimulator.application.usecase.impl;
 
+import br.com.creditas.loansimulator.application.events.EventPublisher;
 import br.com.creditas.loansimulator.application.exceptions.BusinessException;
 import br.com.creditas.loansimulator.application.exceptions.UnsupportedAgeException;
 import br.com.creditas.loansimulator.application.gateway.exchange.ExchangeRateService;
@@ -18,13 +19,16 @@ public class LoanSimulatorUseCaseImpl implements LoanSimulatorUseCase {
     private final ExchangeRateService exchangeRateService;
     private final List<RangesStrategy> rangesStrategies;
     private final FixedPaymentCalculator fixedPaymentCalculator;
+    private final EventPublisher eventPublisher;
 
     public LoanSimulatorUseCaseImpl(ExchangeRateService exchangeRateService,
                                     List<RangesStrategy> rangesStrategies,
-                                    FixedPaymentCalculator fixedPaymentCalculator) {
+                                    FixedPaymentCalculator fixedPaymentCalculator,
+                                    EventPublisher eventPublisher) {
         this.exchangeRateService = exchangeRateService;
         this.rangesStrategies = rangesStrategies;
         this.fixedPaymentCalculator = fixedPaymentCalculator;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -40,7 +44,8 @@ public class LoanSimulatorUseCaseImpl implements LoanSimulatorUseCase {
 
             loanSimulation.setInstallmentAmount(installmentAmount);
 
-            // mandar a persistencia e o envio do email para o async ou fazer via observable
+            eventPublisher.publishEvent(this, loanSimulation);
+
             return loanSimulation;
         } catch (IllegalArgumentException | UnsupportedAgeException e) {
             throw new BusinessException(e.getMessage());
