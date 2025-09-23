@@ -1,6 +1,7 @@
 package br.com.creditas.loansimulator.infrastructure.event.subscriber;
 
 import br.com.creditas.loansimulator.domain.model.LoanSimulation;
+import br.com.creditas.loansimulator.domain.model.enums.Currency;
 import br.com.creditas.loansimulator.infrastructure.event.NewLoanCalculatedObservable;
 import br.com.creditas.loansimulator.infrastructure.gateway.email.MailServiceAdapter;
 import lombok.RequiredArgsConstructor;
@@ -39,18 +40,20 @@ public class SendEmailSubscriber implements ApplicationListener<NewLoanCalculate
                         "<p>Sua simulação de empréstimo foi calculada com sucesso!</p>" +
                         "<p>Detalhes da simulação:</p>" +
                         "<ul>" +
-                        "<li>Valor do Empréstimo: %s %s</li>" +
+                        "<li>Valor solicitado para Empréstimo: %s %s</li>" +
                         "<li>Número de Parcelas: %d</li>" +
-                        "<li>Valor da Parcela: %s %s</li>" +
-                        "<li>Total a Pagar: %s %s</li>" +
+                        "<li>Valor das Parcelas mensais: %s %s</li>" +
+                        "<li>Valor total a ser pago: %s %s</li>" +
+                        "<li>Valor total de juros a ser pago: %s %s</li>" +
                         "</ul>" +
                         "<p>Obrigado por usar nosso simulador!</p>" +
                         "</body></html>",
                 loanSimulation.getPerson().getEmail(),
-                loanSimulation.getCurrency(), loanSimulation.getLoanAmount(),
+                loanSimulation.getCurrency().getSymbol(), loanSimulation.getLoanAmount(),
                 loanSimulation.getQtInstallments(),
-                loanSimulation.getCurrency(), loanSimulation.getInstallmentAmount(),
-                loanSimulation.getCurrency(), loanSimulation.getTotalAmountToPay()
+                Currency.BRL.getSymbol(), loanSimulation.getInstallmentAmount(),
+                Currency.BRL.getSymbol(), loanSimulation.getTotalAmountToPay(),
+                Currency.BRL.getSymbol(), loanSimulation.getTotalInterest()
         );
     }
 }
