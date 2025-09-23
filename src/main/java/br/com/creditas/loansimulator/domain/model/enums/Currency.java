@@ -16,4 +16,5 @@ public enum Currency {
     public String getSymbol() {
         return symbol;
     }
+
 }
