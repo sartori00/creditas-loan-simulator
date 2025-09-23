@@ -1,10 +1,11 @@
 package br.com.creditas.loansimulator.application.usecase.impl;
 
+import br.com.creditas.loansimulator.application.exceptions.BusinessException;
 import br.com.creditas.loansimulator.application.exceptions.UnsupportedAgeException;
 import br.com.creditas.loansimulator.application.gateway.exchange.ExchangeRateService;
 import br.com.creditas.loansimulator.application.usecase.LoanSimulatorUseCase;
 import br.com.creditas.loansimulator.domain.model.LoanSimulation;
-import br.com.creditas.loansimulator.domain.model.enums.Currency;
+import br.com.creditas.loansimulator.domain.service.FixedPaymentCalculator;
 import br.com.creditas.loansimulator.domain.strategy.RangesStrategy;
 
 import java.math.BigDecimal;
@@ -16,43 +17,57 @@ public class LoanSimulatorUseCaseImpl implements LoanSimulatorUseCase {
 
     private final ExchangeRateService exchangeRateService;
     private final List<RangesStrategy> rangesStrategies;
+    private final FixedPaymentCalculator fixedPaymentCalculator;
 
-    public LoanSimulatorUseCaseImpl(ExchangeRateService exchangeRateService, List<RangesStrategy> rangesStrategies) {
+    public LoanSimulatorUseCaseImpl(ExchangeRateService exchangeRateService,
+                                    List<RangesStrategy> rangesStrategies,
+                                    FixedPaymentCalculator fixedPaymentCalculator) {
         this.exchangeRateService = exchangeRateService;
         this.rangesStrategies = rangesStrategies;
+        this.fixedPaymentCalculator = fixedPaymentCalculator;
     }
 
     @Override
     public LoanSimulation execute(LoanSimulation loanSimulation) {
-        var amountBRL = this.convertToBRL(loanSimulation.getCurrency(), loanSimulation.getLoanAmount());
+        try {
+            this.convertToBRL(loanSimulation);
 
-        var monthlyRate = this.getMonthlyRate(loanSimulation.getPerson().getBirthDay());
+            var monthlyRate = this.getMonthlyRate(loanSimulation.getPerson().getBirthDay());
 
-        // calcular
+            var installmentAmount = fixedPaymentCalculator.calculate(monthlyRate,
+                    loanSimulation.getLoanAmountBRL(),
+                    loanSimulation.getQtInstallments());
 
-        // mandar a persistencia e o envio do email para o async ou fazer via observable
-        return null;
+            loanSimulation.setInstallmentAmount(installmentAmount);
+
+            // mandar a persistencia e o envio do email para o async ou fazer via observable
+            return loanSimulation;
+        } catch (IllegalArgumentException | UnsupportedAgeException e) {
+            throw new BusinessException(e.getMessage());
+        }
     }
 
-    private BigDecimal convertToBRL(Currency currency, BigDecimal loanAmount){
-        var exchangeRate = exchangeRateService.getRateToBRL(currency);
+    private void convertToBRL(LoanSimulation loanSimulation){
+        var exchangeRate = exchangeRateService.getRateToBRL(loanSimulation.getCurrency());
 
-        return loanAmount.multiply(exchangeRate);
-    }
+        var amountBRL = loanSimulation.getLoanAmount().multiply(exchangeRate);
 
-    private int getAge(LocalDate birthday){
-        var currentDate = LocalDate.now();
-        return Period.between(birthday, currentDate)
-                .getYears();
+        loanSimulation.setLoanAmountBRL(amountBRL);
     }
 
     private BigDecimal getMonthlyRate(LocalDate birthDay){
         var age = this.getAge(birthDay);
 
         return rangesStrategies.stream()
-                .filter(rangesStrategy -> rangesStrategy.isThisRange(age))
+                .filter(rangeStrategy -> rangeStrategy.isThisRange(age))
                 .findFirst()
                 .orElseThrow(UnsupportedAgeException::new)
                 .monthlyRateCalculation();
+    }
+
+    private int getAge(LocalDate birthday){
+        var currentDate = LocalDate.now();
+        return Period.between(birthday, currentDate)
+                .getYears();
     }
 }

@@ -8,13 +8,15 @@ public record LoanSimulationResponseDto(
         BigDecimal totalAmountToPay,
         BigDecimal installmentAmount,
         BigDecimal totalInterest,
-        PersonResponseDto person
+        PersonResponseDto person,
+        SimulateRequestedResponseDto simulationRequested
 
 ) {
     public LoanSimulationResponseDto(LoanSimulation loanSimulation) {
         this(loanSimulation.getTotalAmountToPay(),
                 loanSimulation.getInstallmentAmount(),
                 loanSimulation.getTotalInterest(),
-                new PersonResponseDto(loanSimulation.getPerson()));
+                new PersonResponseDto(loanSimulation.getPerson()),
+                new SimulateRequestedResponseDto(loanSimulation));
     }
 }

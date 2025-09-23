@@ -3,6 +3,7 @@ package br.com.creditas.loansimulator.domain.model;
 import br.com.creditas.loansimulator.domain.model.enums.Currency;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class LoanSimulation {
     private final Currency currency;
@@ -13,11 +14,9 @@ public class LoanSimulation {
 
     private final Person person;
 
-    private BigDecimal totalAmountToPay;
-
     private BigDecimal installmentAmount;
 
-    private BigDecimal totalInterest;
+    private BigDecimal loanAmountBRL;
 
     public LoanSimulation(Currency currency, BigDecimal loanAmount, int qtInstallments, Person person) {
         this.currency = currency;
@@ -44,11 +43,8 @@ public class LoanSimulation {
     }
 
     public BigDecimal getTotalAmountToPay() {
-        return totalAmountToPay;
-    }
-
-    public void setTotalAmountToPay(BigDecimal totalAmountToPay) {
-        this.totalAmountToPay = totalAmountToPay;
+        return this.installmentAmount.multiply(new BigDecimal(this.qtInstallments))
+                .setScale(2, RoundingMode.UP);
     }
 
     public BigDecimal getInstallmentAmount() {
@@ -60,10 +56,16 @@ public class LoanSimulation {
     }
 
     public BigDecimal getTotalInterest() {
-        return totalInterest;
+        return this.getTotalAmountToPay()
+                .subtract(this.loanAmountBRL)
+                .setScale(2, RoundingMode.UP);
     }
 
-    public void setTotalInterest(BigDecimal totalInterest) {
-        this.totalInterest = totalInterest;
+    public BigDecimal getLoanAmountBRL() {
+        return this.loanAmountBRL;
+    }
+
+    public void setLoanAmountBRL(BigDecimal loanAmountBRL) {
+        this.loanAmountBRL = loanAmountBRL;
     }
 }
