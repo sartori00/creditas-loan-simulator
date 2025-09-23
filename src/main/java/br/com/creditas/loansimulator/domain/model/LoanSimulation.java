@@ -4,15 +4,18 @@ import br.com.creditas.loansimulator.domain.model.enums.Currency;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.UUID;
 
 public class LoanSimulation {
+    private UUID id;
+
     private final Currency currency;
 
     private final BigDecimal loanAmount;
 
     private final int qtInstallments;
 
-    private final Person person;
+    private Person person;
 
     private BigDecimal installmentAmount;
 
@@ -25,6 +28,19 @@ public class LoanSimulation {
         this.person = person;
     }
 
+    public LoanSimulation(UUID id, Person person, Currency currency, BigDecimal loanAmount, BigDecimal loanAmountBRL, int qtInstallments, BigDecimal installmentAmount) {
+        this.id = id;
+        this.person = person;
+        this.currency = currency;
+        this.loanAmount = loanAmount;
+        this.loanAmountBRL = loanAmountBRL;
+        this.qtInstallments = qtInstallments;
+        this.installmentAmount = installmentAmount;
+    }
+
+    public UUID getId() {
+        return id;
+    }
 
     public Currency getCurrency() {
         return currency;
@@ -67,5 +83,9 @@ public class LoanSimulation {
 
     public void setLoanAmountBRL(BigDecimal loanAmountBRL) {
         this.loanAmountBRL = loanAmountBRL;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
     }
 }
