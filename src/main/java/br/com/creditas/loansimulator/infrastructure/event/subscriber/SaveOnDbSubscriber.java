@@ -5,6 +5,7 @@ import br.com.creditas.loansimulator.domain.model.Person;
 import br.com.creditas.loansimulator.infrastructure.event.NewLoanCalculatedObservable;
 import br.com.creditas.loansimulator.infrastructure.gateway.database.persistence.LoanSimulationPersistence;
 import br.com.creditas.loansimulator.infrastructure.gateway.database.persistence.PersonPersistence;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
@@ -23,6 +24,7 @@ public class SaveOnDbSubscriber implements ApplicationListener<NewLoanCalculated
 
     @Override
     @Async("eventSubscribersTaskExecutor")
+    @Transactional
     public void onApplicationEvent(NewLoanCalculatedObservable event) {
         var loanSimulation = event.getLoanSimulation();
         log.info("Saving async Loan Simulation for person document {}", loanSimulation.getPerson().getDocument());

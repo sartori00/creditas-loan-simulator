@@ -1,8 +1,8 @@
-package br.com.creditas.loansimulator.infrastructure.event.publisher;
+package br.com.creditas.loansimulator.infrastructure.event.publisher.impl;
 
-import br.com.creditas.loansimulator.application.events.EventPublisher;
 import br.com.creditas.loansimulator.domain.model.LoanSimulation;
 import br.com.creditas.loansimulator.infrastructure.event.NewLoanCalculatedObservable;
+import br.com.creditas.loansimulator.infrastructure.event.publisher.EventPublisher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;

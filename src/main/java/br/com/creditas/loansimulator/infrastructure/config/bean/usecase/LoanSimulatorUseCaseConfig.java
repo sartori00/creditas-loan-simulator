@@ -1,6 +1,5 @@
 package br.com.creditas.loansimulator.infrastructure.config.bean.usecase;
 
-import br.com.creditas.loansimulator.application.events.EventPublisher;
 import br.com.creditas.loansimulator.application.gateway.exchange.ExchangeRateService;
 import br.com.creditas.loansimulator.application.usecase.LoanSimulatorUseCase;
 import br.com.creditas.loansimulator.application.usecase.impl.LoanSimulatorUseCaseImpl;
@@ -17,8 +16,7 @@ public class LoanSimulatorUseCaseConfig {
     @Bean
     public LoanSimulatorUseCase loanSimulatorUseCase(ExchangeRateService exchangeRateService,
                                                      List<RangesStrategy> rangesStrategies,
-                                                     FixedPaymentCalculator fixedPaymentCalculator,
-                                                     EventPublisher eventPublisher){
-        return new LoanSimulatorUseCaseImpl(exchangeRateService, rangesStrategies, fixedPaymentCalculator, eventPublisher);
+                                                     FixedPaymentCalculator fixedPaymentCalculator){
+        return new LoanSimulatorUseCaseImpl(exchangeRateService, rangesStrategies, fixedPaymentCalculator);
     }
 }

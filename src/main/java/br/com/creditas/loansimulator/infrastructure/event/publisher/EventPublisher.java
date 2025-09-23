@@ -1,4 +1,4 @@
-package br.com.creditas.loansimulator.application.events;
+package br.com.creditas.loansimulator.infrastructure.event.publisher;
 
 import br.com.creditas.loansimulator.domain.model.LoanSimulation;
 

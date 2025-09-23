@@ -7,6 +7,7 @@ import br.com.creditas.loansimulator.infrastructure.gateway.database.repository.
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.OffsetDateTime;
 import java.util.Optional;
 
 @Service
@@ -23,7 +24,14 @@ public class PersonPersistenceImpl implements PersonPersistence {
 
     @Override
     public Person save(Person person) {
-        return personEntityRepository.save(new PersonEntity(person))
-                .toModel();
+        Person saved = personEntityRepository.upsert(
+                person.getDocument(),
+                person.getBirthDay(),
+                person.getEmail(),
+                OffsetDateTime.now(),
+                "username"
+        ).toModel();
+        personEntityRepository.flush();
+        return saved;
     }
 }
