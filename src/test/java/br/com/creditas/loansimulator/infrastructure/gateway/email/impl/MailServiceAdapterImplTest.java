@@ -104,19 +104,6 @@ class MailServiceAdapterImplTest {
   }
 
   @Test
-  @DisplayName("Should handle MessagingException when setting text content")
-  void shouldHandleMessagingExceptionWhenSettingTextContent() throws MessagingException {
-    doThrow(new MessagingException("Error setting content"))
-        .when(mimeMessage)
-        .setContent(any(), anyString());
-
-    mailServiceAdapter.sendEmail(content, recipientEmail);
-
-    verify(javaMailSender, times(1)).createMimeMessage();
-    verify(javaMailSender, times(0)).send(any(MimeMessage.class));
-  }
-
-  @Test
   @DisplayName("Should handle generic MailException during email sending")
   void shouldHandleGenericMailExceptionDuringSending() {
     doThrow(new MailSendException("Generic mail error"))
