@@ -5,6 +5,7 @@ import br.com.creditas.loansimulator.application.usecase.LoanSimulatorUseCase;
 import br.com.creditas.loansimulator.domain.model.LoanSimulation;
 import br.com.creditas.loansimulator.infrastructure.entrypoint.controller.loan.dto.LoanSimulationRequestDto;
 import br.com.creditas.loansimulator.infrastructure.entrypoint.controller.loan.dto.LoanSimulationResponseDto;
+import br.com.creditas.loansimulator.infrastructure.entrypoint.controller.openapi.LoanControllerOpenApi;
 import br.com.creditas.loansimulator.infrastructure.event.publisher.EventPublisher;
 import jakarta.validation.Valid;
 import java.util.ArrayList;
@@ -21,12 +22,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/loan")
-public class LoanController {
+public class LoanController implements LoanControllerOpenApi {
 
   private final LoanSimulatorUseCase loanSimulatorUseCase;
   private final LoanMultipleSimulatorUseCase loanMultipleSimulatorUseCase;
   private final EventPublisher eventPublisher;
 
+  @Override
   @PostMapping
   public ResponseEntity<LoanSimulationResponseDto> simulateALoan(
       @RequestBody @Valid LoanSimulationRequestDto dto) {
@@ -36,6 +38,7 @@ public class LoanController {
     return ResponseEntity.status(HttpStatus.OK).body(new LoanSimulationResponseDto(loanSimulation));
   }
 
+  @Override
   @PostMapping("/batch")
   public CompletableFuture<ResponseEntity<List<LoanSimulationResponseDto>>> simulateMultipleLoans(
       @RequestBody @Valid List<LoanSimulationRequestDto> dto) {

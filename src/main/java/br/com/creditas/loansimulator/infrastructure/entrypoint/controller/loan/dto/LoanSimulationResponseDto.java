@@ -1,12 +1,14 @@
 package br.com.creditas.loansimulator.infrastructure.entrypoint.controller.loan.dto;
 
 import br.com.creditas.loansimulator.domain.model.LoanSimulation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
 
+@Schema(name = "LoanSimulationResponseDto")
 public record LoanSimulationResponseDto(
-    BigDecimal totalAmountToPay,
-    BigDecimal installmentAmount,
-    BigDecimal totalInterest,
+    @Schema(example = "10507.68") BigDecimal totalAmountToPay,
+    @Schema(example = "218.91") BigDecimal installmentAmount,
+    @Schema(example = "617.56") BigDecimal totalInterest,
     PersonResponseDto person,
     SimulateRequestedResponseDto simulationRequested) {
 
