@@ -6,25 +6,19 @@ import br.com.creditas.loansimulator.domain.model.LoanSimulation;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
 
-@Service
 public class LoanMultipleSimulatorUseCaseImpl implements LoanMultipleSimulatorUseCase {
 
   private final LoanSimulatorUseCase loanSimulatorUseCase;
   private final Executor batchModeTaskExecutor;
 
   public LoanMultipleSimulatorUseCaseImpl(
-      LoanSimulatorUseCase loanSimulatorUseCase,
-      @Qualifier("batchModeTaskExecutor") Executor batchModeTaskExecutor) {
+      LoanSimulatorUseCase loanSimulatorUseCase, Executor batchModeTaskExecutor) {
     this.loanSimulatorUseCase = loanSimulatorUseCase;
     this.batchModeTaskExecutor = batchModeTaskExecutor;
   }
 
   @Override
-  @Async("batchModeTaskExecutor")
   public CompletableFuture<List<LoanSimulation>> execute(List<LoanSimulation> simulationsList) {
     if (simulationsList.isEmpty()) {
       return CompletableFuture.completedFuture(List.of());

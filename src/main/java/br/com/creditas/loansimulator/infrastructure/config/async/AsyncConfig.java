@@ -14,9 +14,4 @@ public class AsyncConfig {
   public Executor eventSubscribersTaskExecutor() {
     return new VirtualThreadTaskExecutor("subscriberEvent-virtual-thread-");
   }
-
-  @Bean(name = "batchModeTaskExecutor")
-  public Executor batchModeTaskExecutor() {
-    return new VirtualThreadTaskExecutor("batchEvent-virtual-thread-");
-  }
 }
