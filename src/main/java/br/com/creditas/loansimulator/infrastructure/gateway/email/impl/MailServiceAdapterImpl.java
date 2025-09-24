@@ -33,21 +33,14 @@ public class MailServiceAdapterImpl implements MailServiceAdapter {
       log.info("Email successfully sent to {}", recipientEmail);
     } catch (MailAuthenticationException e) {
       log.error(
-          "It was not possible send email becouse too many login attempts {}: {}",
-          recipientEmail,
-          e.getMessage());
+          "It was not possible send email becouse too many login attempts {}", recipientEmail);
     } catch (MessagingException e) {
-      log.error(
-          "Error while creating or setting email message for {}: {}",
-          recipientEmail,
-          e.getMessage());
+      log.error("Error while creating or setting email message for {}", recipientEmail);
     } catch (MailException e) {
-      log.error("Error while sending email to {}: {}", recipientEmail, e.getMessage());
-    } catch (Exception e) {
       log.error(
-          "An unexpected error occurred while sending email to {}: {}",
-          recipientEmail,
-          e.getMessage());
+          "Daily user sending limit exceeded - Error while sending email to {}", recipientEmail);
+    } catch (Exception e) {
+      log.error("An unexpected error occurred while sending email to {}", recipientEmail);
     }
   }
 }

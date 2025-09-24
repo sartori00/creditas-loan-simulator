@@ -5,7 +5,8 @@ import java.time.Duration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.http.nio.netty.NettyNioAsyncHttpClient;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.sqs.SqsAsyncClient;
@@ -16,12 +17,20 @@ public class AwsSqsConfigLocal {
   @Value("${aws.url:default}")
   private String awsUrl;
 
+  @Value("${aws.access-key-id}")
+  private String awsAccessKeyId;
+
+  @Value("${aws.secret-access-key}")
+  private String awsSecretAccessKey;
+
   @Bean
   public SqsAsyncClient sqsAsyncClient() {
     return SqsAsyncClient.builder()
         .endpointOverride(URI.create(awsUrl))
         .region(Region.US_EAST_1)
-        .credentialsProvider(DefaultCredentialsProvider.create())
+        .credentialsProvider(
+            StaticCredentialsProvider.create(
+                AwsBasicCredentials.create(awsAccessKeyId, awsSecretAccessKey)))
         .httpClientBuilder(
             NettyNioAsyncHttpClient.builder()
                 .maxConcurrency(350)

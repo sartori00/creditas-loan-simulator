@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  loan-simulator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: loan-simulator-app:latest
+    ports:
+      - "8090:8090"
+    environment:
+      MAIL_SMTP_PASSWORD: "cuhm crzu jtxf ilop"
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/creditas-loan-simulator
+      SPRING_DATASOURCE_USERNAME: creditas
+      SPRING_DATASOURCE_PASSWORD: secret
+      CLOUD_AWS_ENDPOINT_URI: http://localstack:4566
+      SQS_SEND_EMAIL_PRODUCER: http://localstack:4566/000000000000/sendmail-queue
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - aws-cli-init
+
+  postgres:
+    image: 'postgres:alpine3.22'
+    environment:
+      - 'POSTGRES_DB=creditas-loan-simulator'
+      - 'POSTGRES_PASSWORD=secret'
+      - 'POSTGRES_USER=creditas'
+    ports:
+      - '5432:5432'
+
+  localstack:
+    image: localstack/localstack:4.8.1
+    container_name: localstack
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=sqs,s3
+    volumes:
+      - localstack_data:/var/lib/localstack
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -o /dev/null -w '%{http_code}' http://localhost:4566/health | grep 200"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  aws-cli-init:
+    image: amazon/aws-cli:2.15.40
+    environment:
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      AWS_DEFAULT_REGION: us-east-1
+    depends_on:
+      localstack:
+        condition: service_started
+    command: >
+      sh -c "
+      echo 'Configuring LocalStack: Creating SQS queue sendmail-queue...' &&
+      aws --endpoint-url=http://localstack:4566 sqs create-queue --queue-name sendmail-queue --attributes VisibilityTimeout=60 &&
+      echo 'SQS queue sendmail-queue created successfully.'
+      "
+
+volumes:
+  localstack_data:
