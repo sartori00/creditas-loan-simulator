@@ -24,8 +24,8 @@ public class AwsSqsConfigLocal {
         .credentialsProvider(DefaultCredentialsProvider.create())
         .httpClientBuilder(
             NettyNioAsyncHttpClient.builder()
-                .maxConcurrency(200)
-                .connectionAcquisitionTimeout(Duration.ofSeconds(30))
+                .maxConcurrency(350)
+                .connectionAcquisitionTimeout(Duration.ofSeconds(60))
                 .connectionTimeout(Duration.ofSeconds(10))
                 .writeTimeout(Duration.ofSeconds(40))
                 .readTimeout(Duration.ofSeconds(40)))
