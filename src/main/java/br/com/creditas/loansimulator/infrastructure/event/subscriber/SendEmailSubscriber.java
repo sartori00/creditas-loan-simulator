@@ -3,7 +3,8 @@ package br.com.creditas.loansimulator.infrastructure.event.subscriber;
 import br.com.creditas.loansimulator.domain.model.LoanSimulation;
 import br.com.creditas.loansimulator.domain.model.enums.Currency;
 import br.com.creditas.loansimulator.infrastructure.event.NewLoanCalculatedObservable;
-import br.com.creditas.loansimulator.infrastructure.gateway.email.MailServiceAdapter;
+import br.com.creditas.loansimulator.infrastructure.gateway.producer.notification.EmailNotificationProducer;
+import br.com.creditas.loansimulator.infrastructure.gateway.producer.notification.impl.dto.EmailNotificationDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
@@ -15,17 +16,16 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class SendEmailSubscriber implements ApplicationListener<NewLoanCalculatedObservable> {
 
-    private final MailServiceAdapter mailServiceAdapter;
+    private final EmailNotificationProducer emailNotificationProducer;
 
     @Override
     @Async("eventSubscribersTaskExecutor")
     public void onApplicationEvent(NewLoanCalculatedObservable event) {
         var loanSimulation = event.getLoanSimulation();
-        log.info("Sending async email for {}", loanSimulation.getPerson().getEmail());
 
         var content = this.buildEmailContent(loanSimulation);
 
-        mailServiceAdapter.sendEmail(loanSimulation, content);
+        emailNotificationProducer.sendToEmailNotification(new EmailNotificationDTO(content, loanSimulation.getPerson().getEmail()));
     }
 
     @Override

@@ -1,10 +1,10 @@
 package br.com.creditas.loansimulator.infrastructure.gateway.email.impl;
 
-import br.com.creditas.loansimulator.domain.model.LoanSimulation;
 import br.com.creditas.loansimulator.infrastructure.gateway.email.MailServiceAdapter;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.mail.MailAuthenticationException;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -18,8 +18,7 @@ public class MailServiceAdapterImpl implements MailServiceAdapter {
 
 
     @Override
-    public void sendEmail(LoanSimulation loanSimulation, String content) {
-        var recipientEmail = loanSimulation.getPerson().getEmail();
+    public void sendEmail(String content, String recipientEmail) {
 
         try {
             var message = javaMailSender.createMimeMessage();
@@ -33,13 +32,14 @@ public class MailServiceAdapterImpl implements MailServiceAdapter {
 
             javaMailSender.send(message);
             log.info("Email successfully sent to {}", recipientEmail);
-
+        } catch (MailAuthenticationException e){
+            log.error("It was not possible send email becouse too many login attempts {}: {}", recipientEmail, e.getMessage());
         } catch (MessagingException e) {
-            log.error("Error while creating or setting email message for {}: {}", recipientEmail, e.getMessage(), e);
+            log.error("Error while creating or setting email message for {}: {}", recipientEmail, e.getMessage());
         } catch (MailException e) {
-            log.error("Error while sending email to {}: {}", recipientEmail, e.getMessage(), e);
+            log.error("Error while sending email to {}: {}", recipientEmail, e.getMessage());
         } catch (Exception e) {
-            log.error("An unexpected error occurred while sending email to {}: {}", recipientEmail, e.getMessage(), e);
+            log.error("An unexpected error occurred while sending email to {}: {}", recipientEmail, e.getMessage());
         }
     }
 }

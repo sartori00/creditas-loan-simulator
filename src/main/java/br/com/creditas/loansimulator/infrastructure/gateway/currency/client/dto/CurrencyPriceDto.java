@@ -1,11 +1,13 @@
 package br.com.creditas.loansimulator.infrastructure.gateway.currency.client.dto;
 
 import br.com.creditas.loansimulator.domain.model.enums.Currency;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public record CurrencyPriceDto(@JsonProperty("code") Currency currency,
                                BigDecimal high,
                                BigDecimal low) {

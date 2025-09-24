@@ -1,9 +1,23 @@
 services:
   postgres:
-    image: 'postgres:latest'
+    image: 'postgres:alpine3.22'
     environment:
       - 'POSTGRES_DB=creditas-loan-simulator'
       - 'POSTGRES_PASSWORD=secret'
       - 'POSTGRES_USER=creditas'
     ports:
       - '5432:5432'
+  localstack:
+    image: localstack/localstack:4.8.1
+    container_name: localstack
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=sqs
+      - EDGE_PORT=4566
+      - DEFAULT_REGION=us-east-1
+    volumes:
+      - localstack_data:/var/lib/localstack
+
+volumes:
+  localstack_data:

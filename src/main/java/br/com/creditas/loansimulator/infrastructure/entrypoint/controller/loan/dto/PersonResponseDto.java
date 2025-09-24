@@ -2,16 +2,14 @@ package br.com.creditas.loansimulator.infrastructure.entrypoint.controller.loan.
 
 import br.com.creditas.loansimulator.domain.model.Person;
 
-import java.time.LocalDate;
-
 public record PersonResponseDto(
         String document,
-        LocalDate birthDay,
+        String birthDay,
         String email
 ) {
     public PersonResponseDto(Person person) {
         this(person.getDocument(),
-                person.getBirthDay(),
+                person.getBirthDay().toString(),
                 person.getEmail());
     }
 }
