@@ -399,6 +399,9 @@ mvn clean verify sonar:sonar \
 - **Segurança aprimorada**, uma vez que o container não contem código fonte e JDK, diminui a área de ataque
 - **Deploy mais rápido**, pois pipelines rodarm mais rapido e PODs iniciarão mais rapido
 
+**10 -** Template de e-mail funcional.
+
+<img src="./assets/Email_Notificao.jpg" alt="Logo Creditas" width="350">
 ## 🙃 Disclaimers:
 
 ### 1 - Envio de notificações por e-mail:
