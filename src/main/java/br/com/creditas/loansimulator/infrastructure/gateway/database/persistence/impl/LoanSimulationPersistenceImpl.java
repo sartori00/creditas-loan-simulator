@@ -11,10 +11,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class LoanSimulationPersistenceImpl implements LoanSimulationPersistence {
 
-    private final LoanSimulationEntityRepository repository;
+  private final LoanSimulationEntityRepository repository;
 
-    @Override
-    public void save(LoanSimulation loanSimulation) {
-        repository.save(new LoanSimulationEntity(loanSimulation));
-    }
+  @Override
+  public void save(LoanSimulation loanSimulation) {
+    repository.save(new LoanSimulationEntity(loanSimulation));
+  }
 }

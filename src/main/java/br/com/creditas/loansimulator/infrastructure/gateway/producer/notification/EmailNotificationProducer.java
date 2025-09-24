@@ -3,5 +3,5 @@ package br.com.creditas.loansimulator.infrastructure.gateway.producer.notificati
 import br.com.creditas.loansimulator.infrastructure.gateway.producer.notification.impl.dto.EmailNotificationDTO;
 
 public interface EmailNotificationProducer {
-    void sendToEmailNotification(EmailNotificationDTO dto);
+  void sendToEmailNotification(EmailNotificationDTO dto);
 }

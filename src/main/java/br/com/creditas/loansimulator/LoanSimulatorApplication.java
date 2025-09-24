@@ -12,8 +12,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableJpaAuditing
 public class LoanSimulatorApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(LoanSimulatorApplication.class, args);
-	}
-
+  public static void main(String[] args) {
+    SpringApplication.run(LoanSimulatorApplication.class, args);
+  }
 }

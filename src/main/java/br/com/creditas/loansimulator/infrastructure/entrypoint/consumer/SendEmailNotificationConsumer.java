@@ -12,13 +12,14 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class SendEmailNotificationConsumer {
 
-    private final ObjectMapper objectMapper;
-    private final MailServiceAdapter mailServiceAdapter;
+  private final ObjectMapper objectMapper;
+  private final MailServiceAdapter mailServiceAdapter;
 
-    @SqsListener("${sqs.queue.loan-simulator.sendmail.listener}")
-    public void receiveMessage(String message) throws JsonProcessingException {
-        var emailNotificationDTO = objectMapper.readValue(message, EmailNotificationDTO.class);
+  @SqsListener("${sqs.queue.loan-simulator.sendmail.listener}")
+  public void receiveMessage(String message) throws JsonProcessingException {
+    var emailNotificationDTO = objectMapper.readValue(message, EmailNotificationDTO.class);
 
-        mailServiceAdapter.sendEmail(emailNotificationDTO.content(), emailNotificationDTO.recipientEmail());
-    }
+    mailServiceAdapter.sendEmail(
+        emailNotificationDTO.content(), emailNotificationDTO.recipientEmail());
+  }
 }

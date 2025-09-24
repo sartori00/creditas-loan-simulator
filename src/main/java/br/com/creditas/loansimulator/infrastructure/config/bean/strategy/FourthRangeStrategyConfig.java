@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class FourthRangeStrategyConfig {
 
-    @Bean
-    public FourthRangeStrategy fourthRangeStrategy(RateRanges rateRanges){
-        return new FourthRangeStrategy(rateRanges);
-    }
+  @Bean
+  public FourthRangeStrategy fourthRangeStrategy(RateRanges rateRanges) {
+    return new FourthRangeStrategy(rateRanges);
+  }
 }

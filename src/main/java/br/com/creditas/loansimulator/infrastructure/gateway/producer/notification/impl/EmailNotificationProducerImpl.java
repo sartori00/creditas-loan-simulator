@@ -13,26 +13,25 @@ import org.springframework.stereotype.Component;
 @Component
 public class EmailNotificationProducerImpl implements EmailNotificationProducer {
 
+  @Value("${sqs.queue.loan-simulator.sendmail.producer}")
+  private String sendMailQueue;
 
-    @Value("${sqs.queue.loan-simulator.sendmail.producer}")
-    private String sendMailQueue;
+  private final SqsTemplate sqsTemplate;
+  private final ObjectMapper objectMapper;
 
-    private final SqsTemplate sqsTemplate;
-    private final ObjectMapper objectMapper;
+  public EmailNotificationProducerImpl(SqsTemplate sqsTemplate, ObjectMapper objectMapper) {
+    this.sqsTemplate = sqsTemplate;
+    this.objectMapper = objectMapper;
+  }
 
-    public EmailNotificationProducerImpl(SqsTemplate sqsTemplate, ObjectMapper objectMapper) {
-        this.sqsTemplate = sqsTemplate;
-        this.objectMapper = objectMapper;
+  @Override
+  public void sendToEmailNotification(EmailNotificationDTO dto) {
+    try {
+      sqsTemplate.send(sendMailQueue, objectMapper.writeValueAsString(dto));
+
+      log.info("Sent to email notification for {}", dto.recipientEmail());
+    } catch (JsonProcessingException e) {
+      log.error("Error on sent email notification for {}", dto.recipientEmail());
     }
-
-    @Override
-    public void sendToEmailNotification(EmailNotificationDTO dto) {
-        try {
-            sqsTemplate.send(sendMailQueue, objectMapper.writeValueAsString(dto));
-
-            log.info("Sent to email notification for {}", dto.recipientEmail());
-        } catch (JsonProcessingException e) {
-            log.error("Error on sent email notification for {}", dto.recipientEmail());
-        }
-    }
+  }
 }

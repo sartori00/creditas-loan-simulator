@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class JacksonConfig {
-    @Bean
-    public Jackson2ObjectMapperBuilderCustomizer addCustomBigDecimalDeserialization() {
-        return builder -> builder.modules(new JavaTimeModule());
-    }
+  @Bean
+  public Jackson2ObjectMapperBuilderCustomizer addCustomBigDecimalDeserialization() {
+    return builder -> builder.modules(new JavaTimeModule());
+  }
 }

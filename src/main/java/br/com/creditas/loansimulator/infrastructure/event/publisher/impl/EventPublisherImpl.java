@@ -11,10 +11,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class EventPublisherImpl implements EventPublisher {
 
-    private final ApplicationEventPublisher eventPublisher;
+  private final ApplicationEventPublisher eventPublisher;
 
-    @Override
-    public void publishEvent(Object source, LoanSimulation loanSimulation) {
-        eventPublisher.publishEvent(new NewLoanCalculatedObservable(this, loanSimulation));
-    }
+  @Override
+  public void publishEvent(Object source, LoanSimulation loanSimulation) {
+    eventPublisher.publishEvent(new NewLoanCalculatedObservable(this, loanSimulation));
+  }
 }

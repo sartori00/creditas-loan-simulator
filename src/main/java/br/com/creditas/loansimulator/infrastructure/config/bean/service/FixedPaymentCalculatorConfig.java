@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class FixedPaymentCalculatorConfig {
 
-    @Bean
-    public FixedPaymentCalculator fixedPaymentCalculator(){
-        return new FixedPaymentCalculator();
-    }
+  @Bean
+  public FixedPaymentCalculator fixedPaymentCalculator() {
+    return new FixedPaymentCalculator();
+  }
 }

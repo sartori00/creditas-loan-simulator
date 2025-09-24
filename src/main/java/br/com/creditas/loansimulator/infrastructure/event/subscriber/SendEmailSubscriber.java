@@ -16,44 +16,48 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class SendEmailSubscriber implements ApplicationListener<NewLoanCalculatedObservable> {
 
-    private final EmailNotificationProducer emailNotificationProducer;
+  private final EmailNotificationProducer emailNotificationProducer;
 
-    @Override
-    @Async("eventSubscribersTaskExecutor")
-    public void onApplicationEvent(NewLoanCalculatedObservable event) {
-        var loanSimulation = event.getLoanSimulation();
+  @Override
+  @Async("eventSubscribersTaskExecutor")
+  public void onApplicationEvent(NewLoanCalculatedObservable event) {
+    var loanSimulation = event.getLoanSimulation();
 
-        var content = this.buildEmailContent(loanSimulation);
+    var content = this.buildEmailContent(loanSimulation);
 
-        emailNotificationProducer.sendToEmailNotification(new EmailNotificationDTO(content, loanSimulation.getPerson().getEmail()));
-    }
+    emailNotificationProducer.sendToEmailNotification(
+        new EmailNotificationDTO(content, loanSimulation.getPerson().getEmail()));
+  }
 
-    @Override
-    public boolean supportsAsyncExecution() {
-        return ApplicationListener.super.supportsAsyncExecution();
-    }
+  @Override
+  public boolean supportsAsyncExecution() {
+    return ApplicationListener.super.supportsAsyncExecution();
+  }
 
-    private String buildEmailContent(LoanSimulation loanSimulation){
-        return String.format(
-                "<html><body>" +
-                        "<h2>Olá %s,</h2>" +
-                        "<p>Sua simulação de empréstimo foi calculada com sucesso!</p>" +
-                        "<p>Detalhes da simulação:</p>" +
-                        "<ul>" +
-                        "<li>Valor solicitado para Empréstimo: %s %s</li>" +
-                        "<li>Número de Parcelas: %d</li>" +
-                        "<li>Valor das Parcelas mensais: %s %s</li>" +
-                        "<li>Valor total a ser pago: %s %s</li>" +
-                        "<li>Valor total de juros a ser pago: %s %s</li>" +
-                        "</ul>" +
-                        "<p>Obrigado por usar nosso simulador!</p>" +
-                        "</body></html>",
-                loanSimulation.getPerson().getEmail(),
-                loanSimulation.getCurrency().getSymbol(), loanSimulation.getLoanAmount(),
-                loanSimulation.getQtInstallments(),
-                Currency.BRL.getSymbol(), loanSimulation.getInstallmentAmount(),
-                Currency.BRL.getSymbol(), loanSimulation.getTotalAmountToPay(),
-                Currency.BRL.getSymbol(), loanSimulation.getTotalInterest()
-        );
-    }
+  private String buildEmailContent(LoanSimulation loanSimulation) {
+    return String.format(
+        "<html><body>"
+            + "<h2>Olá %s,</h2>"
+            + "<p>Sua simulação de empréstimo foi calculada com sucesso!</p>"
+            + "<p>Detalhes da simulação:</p>"
+            + "<ul>"
+            + "<li>Valor solicitado para Empréstimo: %s %s</li>"
+            + "<li>Número de Parcelas: %d</li>"
+            + "<li>Valor das Parcelas mensais: %s %s</li>"
+            + "<li>Valor total a ser pago: %s %s</li>"
+            + "<li>Valor total de juros a ser pago: %s %s</li>"
+            + "</ul>"
+            + "<p>Obrigado por usar nosso simulador!</p>"
+            + "</body></html>",
+        loanSimulation.getPerson().getEmail(),
+        loanSimulation.getCurrency().getSymbol(),
+        loanSimulation.getLoanAmount(),
+        loanSimulation.getQtInstallments(),
+        Currency.BRL.getSymbol(),
+        loanSimulation.getInstallmentAmount(),
+        Currency.BRL.getSymbol(),
+        loanSimulation.getTotalAmountToPay(),
+        Currency.BRL.getSymbol(),
+        loanSimulation.getTotalInterest());
+  }
 }

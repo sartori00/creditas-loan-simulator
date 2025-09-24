@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class FirstRangeStrategyConfig {
 
-    @Bean
-    public FirstRangeStrategy firstRangeStrategy(RateRanges rateRanges){
-        return new FirstRangeStrategy(rateRanges);
-    }
+  @Bean
+  public FirstRangeStrategy firstRangeStrategy(RateRanges rateRanges) {
+    return new FirstRangeStrategy(rateRanges);
+  }
 }

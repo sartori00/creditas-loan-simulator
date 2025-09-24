@@ -3,5 +3,5 @@ package br.com.creditas.loansimulator.infrastructure.gateway.database.persistenc
 import br.com.creditas.loansimulator.domain.model.LoanSimulation;
 
 public interface LoanSimulationPersistence {
-    void save(LoanSimulation loanSimulation);
+  void save(LoanSimulation loanSimulation);
 }
