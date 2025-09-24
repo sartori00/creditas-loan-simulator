@@ -1,4 +1,4 @@
-package br.com.creditas.loansimulator.infrastructure.config;
+package br.com.creditas.loansimulator.infrastructure.config.async;
 
 import io.netty.channel.ChannelOption;
 import java.time.Duration;
