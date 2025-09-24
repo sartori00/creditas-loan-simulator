@@ -402,6 +402,7 @@ mvn clean verify sonar:sonar \
 **10 -** Template de e-mail funcional.
 
 <img src="./assets/Email_Notificao.jpg" alt="Logo Creditas" width="350">
+
 ## 🙃 Disclaimers:
 
 ### 1 - Envio de notificações por e-mail:
