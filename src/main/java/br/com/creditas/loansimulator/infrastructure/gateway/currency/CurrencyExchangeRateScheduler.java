@@ -1,8 +1,10 @@
 package br.com.creditas.loansimulator.infrastructure.gateway.currency;
 
 import br.com.creditas.loansimulator.infrastructure.gateway.currency.client.CurrencyExchangeRateClient;
+import br.com.creditas.loansimulator.infrastructure.gateway.currency.client.dto.CurrencyExchangeRateDto;
 import br.com.creditas.loansimulator.infrastructure.gateway.currency.client.dto.CurrencyPriceDto;
 import jakarta.annotation.PostConstruct;
+import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +27,13 @@ public class CurrencyExchangeRateScheduler {
   @Scheduled(cron = "${schedule.get-new-exchange-rate-cron-pattern}")
   public void getNewExchangeRate() {
     log.info("Updating exchange rates");
-    List<CurrencyPriceDto> exchangeRateList = currencyExchangeRateClient.getExchangeRate().toList();
+
+    List<CurrencyPriceDto> exchangeRateList =
+        currencyExchangeRateClient
+            .getExchangeRate()
+            .map(CurrencyExchangeRateDto::toList)
+            .blockOptional()
+            .orElse(Collections.emptyList());
 
     exchangeRateList.forEach(
         exchangeRate ->
