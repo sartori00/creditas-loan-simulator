@@ -12,7 +12,7 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.sqs.SqsAsyncClient;
 
 @Configuration
-public class AwsSqsConfigLocal {
+public class AwsSqsConfig {
 
   @Value("${aws.url:default}")
   private String awsUrl;
